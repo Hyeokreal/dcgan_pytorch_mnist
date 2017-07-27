@@ -1,4 +1,4 @@
 .idea/*
-models/
-samples/
-.DS_Store/
+models/*
+samples/*
+.DS_Store/*
