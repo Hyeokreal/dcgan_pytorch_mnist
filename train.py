@@ -1,11 +1,5 @@
-import torch
-# import torch.utils.data as data_util
-import torch.nn as nn
-import torch.nn.functional as F
 import torchvision.datasets as dataset
 import torchvision.transforms as transforms
-from torch.autograd import Variable
-import numpy as np
 import torch
 import torchvision
 import os
@@ -13,7 +7,6 @@ from torch import optim
 from torch.autograd import Variable
 from model import D
 from model import G
-
 
 num_epochs = 20
 batch_size = 100
@@ -26,12 +19,11 @@ sample_step = 500
 sample_path = './samples'
 model_path = './models'
 
-
 img_size = 64
 transform = transforms.Compose([
-        transforms.Scale(img_size),
-        transforms.ToTensor(),
-        transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
+    transforms.Scale(img_size),
+    transforms.ToTensor(),
+    transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
 ])
 
 train_dataset = dataset.MNIST(root='./data/',
@@ -42,8 +34,6 @@ train_dataset = dataset.MNIST(root='./data/',
 train_loader = torch.utils.data.DataLoader(dataset=train_dataset,
                                            batch_size=batch_size,
                                            shuffle=True)
-
-
 
 generator = G()
 discriminator = D()
@@ -95,6 +85,7 @@ def sample():
 
 
 fixed_noise = to_variable(torch.randn(batch_size, z_dim))
+fixed_noise = fixed_noise.view([-1, z_dim, 1, 1])
 total_step = len(train_loader)
 
 ones_label = Variable(torch.ones(batch_size))
@@ -106,7 +97,6 @@ for epoch in range(num_epochs):
         z = to_variable(torch.randn(batch_size, z_dim))
         z = z.view(-1, z_dim, 1, 1)
 
-
         outputs = discriminator.forward(x)
         real_loss = torch.mean((outputs - 1) ** 2)
 
@@ -114,7 +104,6 @@ for epoch in range(num_epochs):
         outputs = discriminator.forward(fake_img)
 
         fake_loss = torch.mean(outputs ** 2)
-
 
         # how torch do training
 
@@ -132,8 +121,6 @@ for epoch in range(num_epochs):
         reset_grad()
         g_loss.backward()
         g_optimizer.step()
-
-
 
         if (i + 1) % log_step == 0:
             print('Epoch [%d/%d], Step[%d/%d], d_real_loss: %.4f, '
