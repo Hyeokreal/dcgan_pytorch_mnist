@@ -11,7 +11,7 @@ from model import G
 num_epochs = 20
 batch_size = 100
 z_dim = 100
-x_dim = 64
+x_dim = 32
 sample_size = 100
 lr = 0.0002
 log_step = 10
@@ -19,7 +19,7 @@ sample_step = 500
 sample_path = './samples'
 model_path = './models'
 
-img_size = 64
+img_size = 32
 transform = transforms.Compose([
     transforms.Scale(img_size),
     transforms.ToTensor(),
